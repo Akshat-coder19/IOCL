@@ -1,0 +1,10 @@
+def get_file_text(file_contents):
+    extension = os.path.splitext(file_contents.name)[1]
+    text = ""
+    if extension == ".pdf":
+        pdf_reader = PdfReader(file_contents)
+        for page in pdf_reader.pages:
+            text += page.extract_text()
+    elif extension in [".txt", ".csv", ".doc", ".docx"]:
+        text = file_contents.read().decode("utf-8", errors='ignore')  # Decode text for non-PDF files
+    return text
