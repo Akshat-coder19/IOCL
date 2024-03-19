@@ -8,7 +8,6 @@ from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from htmlTemplates import css, bot_template, user_template
-from langchain.llms import HuggingFaceHub
 import os
 
 
@@ -36,12 +35,7 @@ def get_text_chunks(text):
 
 
 def get_vectorstore(text_chunks):
-    try:
-        embeddings = OpenAIEmbeddings(openai_api_key="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")
-    except Exception as e:
-        print("Error:", e)
-        print("Falling back to free model...")
-        embeddings = OpenAIEmbeddings(model_name="text-davinci-002")
+    embeddings = OpenAIEmbeddings(openai_api_key="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")
     vectorstore = FAISS.from_texts(texts=text_chunks, embedding=embeddings)
     return vectorstore
 
