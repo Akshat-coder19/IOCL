@@ -39,7 +39,7 @@ def get_text_chunks(text):
 
 def get_vectorstore(text_chunks):
     try:
-        embeddings = OpenAIEmbeddings(openai_api_key=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)
+        embeddings = OpenAIEmbeddings(openai_api_key="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")
     except Exception as e:
         print("Error:", e)
         print("Falling back to free model...")
@@ -49,7 +49,7 @@ def get_vectorstore(text_chunks):
 
 
 def get_conversation_chain(vectorstore):
-    llm = ChatOpenAI(openai_api_key=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)
+    llm = ChatOpenAI(openai_api_key="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")
     memory = ConversationBufferMemory(
         memory_key='chat_history', return_messages=True)
     conversation_chain = ConversationalRetrievalChain.from_llm(
