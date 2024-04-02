@@ -1,5 +1,8 @@
 import streamlit as st
-from dotenv import load_dotenv
+import os
+import dotenv
+load_dotenv()
+
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
@@ -8,11 +11,8 @@ from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from htmlTemplates import css, bot_template, user_template
-from langchain.llms import HuggingFaceHub
-import os
 
-# Load the OpenAI API key from the secrets
-openai_api_key = st.secrets["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"]
+openai_api_key = st.secrets["openai_api_key"]
 
 def get_file_text(file_contents):
     extension = os.path.splitext(file_contents.name)[1]
@@ -39,7 +39,7 @@ def get_text_chunks(text):
 
 def get_vectorstore(text_chunks):
     try:
-        embeddings = OpenAIEmbeddings(openai_api_key="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")
+        embeddings = OpenAIEmbeddings(openai_api_key="openai_api_key")
     except Exception as e:
         print("Error:", e)
         print("Falling back to free model...")
@@ -49,7 +49,7 @@ def get_vectorstore(text_chunks):
 
 
 def get_conversation_chain(vectorstore):
-    llm = ChatOpenAI(openai_api_key="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")
+    llm = ChatOpenAI(openai_api_key="openai_api_key")
     memory = ConversationBufferMemory(
         memory_key='chat_history', return_messages=True)
     conversation_chain = ConversationalRetrievalChain.from_llm(
@@ -74,7 +74,6 @@ def handle_userinput(user_question):
 
 
 def main():
-    load_dotenv()
     st.set_page_config(page_title="IOCL CHATBOT",
                        page_icon=":books:")
     st.write(css, unsafe_allow_html=True)
@@ -92,17 +91,4 @@ def main():
     with st.sidebar:
         st.subheader("Your documents")
         pdf_docs = st.file_uploader(
-"Upload your PDFs here and click on 'Process'", accept_multiple_files=True)
-        if st.button("Process"):
-            with st.spinner("Processing"):
-                raw_text = ""
-                for doc in pdf_docs:
-                    raw_text += get_file_text(doc)
-                text_chunks = get_text_chunks(raw_text)
-                vectorstore = get_vectorstore(text_chunks)
-                st.session_state.conversation = get_conversation_chain(
-                    vectorstore)
-
-
-if __name__ == '__main__':
-    main()
+            "Upload your PDFs here and click on 'Process
