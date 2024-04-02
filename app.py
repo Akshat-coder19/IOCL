@@ -11,6 +11,8 @@ from htmlTemplates import css, bot_template, user_template
 from langchain.llms import HuggingFaceHub
 import os
 
+# Load the OpenAI API key from the secrets
+openai_api_key = st.secrets["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"]
 
 def get_file_text(file_contents):
     extension = os.path.splitext(file_contents.name)[1]
@@ -37,7 +39,7 @@ def get_text_chunks(text):
 
 def get_vectorstore(text_chunks):
     try:
-        embeddings = OpenAIEmbeddings(openai_api_key="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")
+        embeddings = OpenAIEmbeddings(openai_api_key=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)
     except Exception as e:
         print("Error:", e)
         print("Falling back to free model...")
@@ -47,7 +49,7 @@ def get_vectorstore(text_chunks):
 
 
 def get_conversation_chain(vectorstore):
-    llm = ChatOpenAI(openai_api_key="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")
+    llm = ChatOpenAI(openai_api_key=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)
     memory = ConversationBufferMemory(
         memory_key='chat_history', return_messages=True)
     conversation_chain = ConversationalRetrievalChain.from_llm(
@@ -90,7 +92,7 @@ def main():
     with st.sidebar:
         st.subheader("Your documents")
         pdf_docs = st.file_uploader(
-            "Upload your PDFs here and click on 'Process'", accept_multiple_files=True)
+"Upload your PDFs here and click on 'Process'", accept_multiple_files=True)
         if st.button("Process"):
             with st.spinner("Processing"):
                 raw_text = ""
@@ -103,4 +105,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main() 
+    main()
